@@ -4,7 +4,7 @@ Run **MiniMax-H3-Image at its original BF16/FP32 precision on four AMD Radeon AI
 
 **Native 4K · Official six-step schedule · No weight quantization · AMD RDNA4**
 
-[Measured performance](#measured-performance) · [Quick start](#quick-start) · [How it works](#how-it-works) · [Model sources](models/README.md) · [Validation](#validation-and-scope)
+[Measured performance](#measured-performance) · [Quick start](#quick-start) · [How it works](#how-it-works) · [Documentation](docs/README.md) · [Development](CONTRIBUTING.md)
 
 ## What works today
 
@@ -110,6 +110,9 @@ The supported claim is **single-image text-to-image generation with CPU offload 
 
 | Path | Purpose |
 |---|---|
+| [`docs/`](docs/README.md) | Setup guide, benchmarks, source identities, and historical releases |
+| [`tools/`](tools/README.md) | Setup, inference, and reporting tool reference |
+| [`configs/`](configs/README.md) | Workloads, environment identities, and historical inputs |
 | [`src/minimax_h3_image_rocm/`](src/minimax_h3_image_rocm/) | Original-precision Image pipeline, weights, encoder, DiT, VAE, and metrics |
 | [`tools/run_rocm10.py`](tools/run_rocm10.py) | Foundation launcher, device reservations, ownership checks, and resource monitoring |
 | [`tools/run_native_image.py`](tools/run_native_image.py) | Measured single-request inference entry point |
@@ -118,6 +121,7 @@ The supported claim is **single-image text-to-image generation with CPU offload 
 | [`configs/o5_qualification_matrix.json`](configs/o5_qualification_matrix.json) | Three-prompt, two-seed functional qualification workload |
 | [`models/README.md`](models/README.md) | Model links, fixed revisions, and checksums |
 | [`docs/NATIVE_SOURCES.md`](docs/NATIVE_SOURCES.md) | Upstream commits, file hashes, and license identities |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Development checks, numerical qualification, and publication boundaries |
 
 The earlier **single-card INT8 ConvRot 2K** baseline is preserved in [`v0.1.0-image-int8-first-image`](docs/releases/v0.1.0-image-int8-first-image.md). It uses different weights and precision and is not part of the native-precision table above.
 
