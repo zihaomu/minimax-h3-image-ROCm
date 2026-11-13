@@ -1,0 +1,517 @@
+{
+  "generator": {
+    "path": "tools/summarize_resolution_sweep.py",
+    "sha256": "b10b0fa1fd9643d463f0fa42788ae94fdd475a2eebc82a1cc62ed89ac8a8caf6"
+  },
+  "identity": {
+    "config": {
+      "attention_policy": "fail if the large DiT attention cannot use PyTorch FLASH_ATTENTION",
+      "cfg": 1,
+      "guidance_branch": false,
+      "precision": {
+        "conditioning_stage_boundary": "text encoder runs in a disposable GPU process; a hash-verified BF16 CPU safetensors artifact is the process boundary before clean-process DiT placement",
+        "dit_fp32_islands": "released FP32 input projection, time MLP, RoPE source and output heads",
+        "dit_main": "released BF16",
+        "dit_qkv_layout": "released raw head-major rows explicitly permuted to component-major Q|K|V rows consumed by the independent Comfy compute modules",
+        "dit_time_embedding_handoff": "FP32 time MLP and SiLU, then BF16 AdaLN projection, matching the released Diffusers Image path",
+        "pdd_heads": "released FP32 absolute heads",
+        "scheduler": "FP32 velocity Euler",
+        "text_encoder": "released BF16",
+        "vae": "released FP32"
+      },
+      "prompt": "A square studio product photograph of a handmade red fox plush toy sitting on a pale wooden table. The fox has soft burnt-orange fur, a cream muzzle and belly, two pointed ears, small dark glass eyes, and a thick curled tail with a white tip. A small blue ceramic cup stands to its left and three yellow daisies lie to its right. Behind the table is a softly blurred sage-green wall. Gentle afternoon sunlight enters from the upper left, revealing fine individual fabric fibers and neat stitched seams. The composition is centered and balanced, with natural soft shadows, realistic material texture, warm colors, and crisp detail on the fox. No text or watermark.",
+      "qualification_gates": {
+        "four_static_vs_single_offload": {
+          "conditioning_exact": true,
+          "each_step_max_absolute": 0.00001,
+          "each_step_relative_l2_max": 0.000001,
+          "initial_noise_exact": true,
+          "output_sha256_match_is_informational": true,
+          "strict_flash_dit_calls": 300,
+          "visual_semantic_check_required": true
+        }
+      },
+      "schema_version": 1,
+      "seed": 42,
+      "sigmas": [
+        1,
+        0.9675236940383911,
+        0.8875485062599182,
+        0.75,
+        0.5327739119529724,
+        0.23200887441635132,
+        0
+      ],
+      "steps": 6,
+      "text_encoder_process_isolation": true,
+      "workload": "MiniMax-H3-Image original-precision text-to-image qualification"
+    },
+    "environment": {
+      "comfyui_commit": "989d93d0d968e704c589ce0146bb18c77f6b50cc",
+      "device_count": 4,
+      "devices": [
+        {
+          "architecture": "gfx1201",
+          "logical_id": 0,
+          "name": "AMD Radeon AI PRO R9700",
+          "total_memory_bytes": 34208743424
+        },
+        {
+          "architecture": "gfx1201",
+          "logical_id": 1,
+          "name": "AMD Radeon AI PRO R9700",
+          "total_memory_bytes": 34208743424
+        },
+        {
+          "architecture": "gfx1201",
+          "logical_id": 2,
+          "name": "AMD Radeon AI PRO R9700",
+          "total_memory_bytes": 34208743424
+        },
+        {
+          "architecture": "gfx1201",
+          "logical_id": 3,
+          "name": "AMD Radeon AI PRO R9700",
+          "total_memory_bytes": 34208743424
+        }
+      ],
+      "hip_build": "7.16.26385",
+      "image_id": "sha256:a79c374ab2bc93c0e4358da6c7bda5cb84cf1308e8aff74fc99fc95c511cbd03",
+      "physical_gpus": [
+        "1",
+        "5",
+        "6",
+        "7"
+      ],
+      "python": "3.13.13",
+      "torch": "2.14.0+rocm10.1.0",
+      "triton": "3.8.0+git669b31ac.rocm10.1.0"
+    },
+    "host_total_ram_bytes": 540772896768,
+    "model_verification_sha256": "38e0b5347839373a0f80c613e9bf2ae241f439384eaf61ebdf30b00947cbb596",
+    "physical_gpu_order": [
+      1,
+      5,
+      6,
+      7
+    ],
+    "project_git_base": "6fbcf68c80210b7ad6ba51d2e029cd01568ff67f",
+    "source_files": [
+      {
+        "path": "tools/run_native_image.py",
+        "sha256": "d12193d921200272a8467624bce6f023173eceadbe44155a9f61f1b2444a7092"
+      },
+      {
+        "path": "tools/encode_native_conditioning.py",
+        "sha256": "c9330faede164a0f738eedce85824f8fc92d8eed5c92dcf7df90b054d6b97eb0"
+      },
+      {
+        "path": "tools/run_rocm10.py",
+        "sha256": "1d11d02fb633654e5c1f7a0e332a7664b799be41531e941267e37ec862f4ded9"
+      },
+      {
+        "path": "configs/native_t2i.json",
+        "sha256": "49561fba0ea93a83cf33bf2cdd8ec0aa0dfda7edb27e180a9d50dac72f7c3f3a"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/__init__.py",
+        "sha256": "98506cd3b655aa10f773a232190c4cdc337a6ed96bbf7bf90d0598db044512e7"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/bootstrap.py",
+        "sha256": "895e0d6a87d364ac70e4974654ea264236719f70a3605128c2e9b5a8db2848c6"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/dit.py",
+        "sha256": "151b6a7aa9f5c8112bb447184aa1cafa185f18fc93d4d7d300166a87650d4379"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/metrics.py",
+        "sha256": "b438e0776916e96e92a02b85c1dcfa6a98907696c3409175a1ee2dc854dfff05"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/pipeline.py",
+        "sha256": "6aeb6446bd03888ff030ccc0d6c281bce9b94d60b4ba276f11500b11a745bf54"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/text_encoder.py",
+        "sha256": "af6d7f01bbc8286d6e1670c7b97ae23b81c4542d19f38d691fed6a1a064ff721"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/vae.py",
+        "sha256": "01de4ce67f8367e6e723d1534c6029635928f6c2a1c64b3715063ecd12f8bbb8"
+      },
+      {
+        "path": "src/minimax_h3_image_rocm/weights.py",
+        "sha256": "3544390674388362988ee6c655ef2bd37bf7cae49177116255f20b11956aa6cb"
+      }
+    ]
+  },
+  "measurement": {
+    "batch_size": 1,
+    "cache_policy": "fresh process per sample; OS file and kernel caches may be warm; no conditioning reuse",
+    "memory_scope": "whole-card VRAM samples; summed process RSS/HWM; whole-host delta includes unrelated activity and page cache",
+    "monitor_interval_seconds": 0.5,
+    "request_scope": "pipeline including text encoding, weight loading, six steps, VAE, PNG and cleanup; excludes process/container bootstrap",
+    "timing_summary": "arithmetic mean and observed range; no throughput or statistical confidence claim"
+  },
+  "model_sources": [
+    {
+      "repository": "MiniMaxAI/MiniMax-H3",
+      "revision": "0919fb684102ef115126612f3fbb84d1027e7317"
+    },
+    {
+      "repository": "MiniMaxAI/MiniMax-H3-Image",
+      "revision": "5f90473023975e6271b0ed1dd84c4e88e4bbc6d3"
+    }
+  ],
+  "resolutions": [
+    {
+      "aa_tensor_and_png_exact": true,
+      "denoise_seconds": {
+        "max": 7.353326975076925,
+        "mean": 7.298262930999044,
+        "min": 7.243198886921164
+      },
+      "height": 1024,
+      "launcher_seconds": {
+        "max": 77.6914259979967,
+        "mean": 77.16183514599106,
+        "min": 76.63224429398542
+      },
+      "max_host_used_delta_gib": 6.428699493408203,
+      "max_process_tree_rss_gib": 6.557548522949219,
+      "max_process_tree_sum_vm_hwm_gib": 6.672878265380859,
+      "max_single_gpu_vram_gib": 16.380775451660156,
+      "request_seconds": {
+        "max": 68.62742747802986,
+        "mean": 68.61141661752481,
+        "min": 68.59540575701976
+      },
+      "sample_count": 2,
+      "samples": [
+        {
+          "denoise_seconds": 7.243198886921164,
+          "evidence_sha256": {
+            "execution.json": "1f1afd0bf1932bb969b5d55cdb33f48dd4e0a75e1be6e36c3f324f57015a3a3e",
+            "monitor-summary.json": "52157b1ae5f3ced0ff914cce015f05bdfaf1a83696dce96a86cb5da90d1740cc",
+            "monitor.jsonl": "854f516b4097c6d8f591be6377eb5a9b09022e20cd2821914347baaf70c2ff88",
+            "postflight.json": "e60ff1794618b8892881d837b814aaa6a304bb8ebc776b93a23ba005689e2f83",
+            "result.json": "075722fe16bee89d2990836ff88650370bbddceccb19dc0ee04ea9a2f02ee636",
+            "summary.json": "0a311bd272d55a557047b54187d0dd564e9f62a0632dbcbd211df1a16e04e23a"
+          },
+          "launcher_seconds": 76.63224429398542,
+          "peak_host_used_delta_bytes": 6902763520,
+          "peak_process_tree_rss_bytes": 7041114112,
+          "peak_process_tree_sum_vm_hwm_bytes": 7163015168,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 16603615232,
+            "5": 17495482368,
+            "6": 17485430784,
+            "7": 17588723712
+          },
+          "phase_seconds": {
+            "denoise_step": 7.243198886921164,
+            "dit_load": 28.39536255301209,
+            "save_png": 0.3802172839641571,
+            "text_encode_isolated_process": 29.309139674995095,
+            "vae_decode": 1.6638690319960006,
+            "vae_load": 1.0387459539924748
+          },
+          "png_sha256": "339ef3032765cce98661070a6d44b42fcfb370ec37c0ea5ec0aace02b7b0c457",
+          "request_seconds": 68.62742747802986,
+          "run_id": "readme-native-1024-seed42-r1",
+          "started_at_utc": "2026-11-13T09:55:22.634459+00:00",
+          "strict_flash_dit_calls": 0,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "ed9c30acf8d85eb5e32c28f40da507a76460072d4017bb28172bb59a810d6820",
+            "latent-step-01.safetensors": "6a8a72e0a8f2da91d05b48de8945587c8bcb93b4efd16d31ef2bddf4bbd5bd0b",
+            "latent-step-02.safetensors": "1a2ff5f86efc7fb7631161c2b971477c36a406b5c44a2319face3d64899ae632",
+            "latent-step-03.safetensors": "da2728d7a6e01b9f7b84f2983061f59c305221395e2d6b8e2657369b19859441",
+            "latent-step-04.safetensors": "6c64d38f900d8a06ee6e81ec19f37c98d8d8ab9536056a5945c99a9f6acc3eec",
+            "latent-step-05.safetensors": "9de9cdb6775ca78e88bbb45030ec00af077512d9b1dca893706582acfd2a5540",
+            "latent-step-06.safetensors": "59dd1093b83a272ab000b94fe8898bd5bb0bf252b8a7a46af322b00e64a1d43a"
+          }
+        },
+        {
+          "denoise_seconds": 7.353326975076925,
+          "evidence_sha256": {
+            "execution.json": "583b2a215b07bbc95a72c272b06c5f723e1539abb118d2f1ef7dd385050b99fe",
+            "monitor-summary.json": "4e614324c2d74b3cce432e98a8c95c385c6b7bd31b40b82d0adcfa09a6d93b93",
+            "monitor.jsonl": "2277859896d4fdfd3994af9b45b1e10f2547835a44f54a4e92944bd97c57c305",
+            "postflight.json": "cdf235e76c3d008cca1b055a36620f2e294200da46bf49f275e02b672b2cd9c1",
+            "result.json": "f87538b63c4f0c319b9ce4118f7a0014dc7deb9943fef13ca5f882be44378ba2",
+            "summary.json": "ac9749b13d0832056166ce0bc66db15005842c41768f7047bb220bc02ca0a90d"
+          },
+          "launcher_seconds": 77.6914259979967,
+          "peak_host_used_delta_bytes": 6092587008,
+          "peak_process_tree_rss_bytes": 6711840768,
+          "peak_process_tree_sum_vm_hwm_bytes": 7164948480,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 16603799552,
+            "5": 17495920640,
+            "6": 17485447168,
+            "7": 17588453376
+          },
+          "phase_seconds": {
+            "denoise_step": 7.353326975076925,
+            "dit_load": 28.136538821971044,
+            "save_png": 0.38201522402232513,
+            "text_encode_isolated_process": 29.365844019979704,
+            "vae_decode": 1.6929897600202821,
+            "vae_load": 1.0356692320201546
+          },
+          "png_sha256": "339ef3032765cce98661070a6d44b42fcfb370ec37c0ea5ec0aace02b7b0c457",
+          "request_seconds": 68.59540575701976,
+          "run_id": "readme-native-1024-seed42-r2",
+          "started_at_utc": "2026-11-13T09:57:01.494868+00:00",
+          "strict_flash_dit_calls": 0,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "ed9c30acf8d85eb5e32c28f40da507a76460072d4017bb28172bb59a810d6820",
+            "latent-step-01.safetensors": "6a8a72e0a8f2da91d05b48de8945587c8bcb93b4efd16d31ef2bddf4bbd5bd0b",
+            "latent-step-02.safetensors": "1a2ff5f86efc7fb7631161c2b971477c36a406b5c44a2319face3d64899ae632",
+            "latent-step-03.safetensors": "da2728d7a6e01b9f7b84f2983061f59c305221395e2d6b8e2657369b19859441",
+            "latent-step-04.safetensors": "6c64d38f900d8a06ee6e81ec19f37c98d8d8ab9536056a5945c99a9f6acc3eec",
+            "latent-step-05.safetensors": "9de9cdb6775ca78e88bbb45030ec00af077512d9b1dca893706582acfd2a5540",
+            "latent-step-06.safetensors": "59dd1093b83a272ab000b94fe8898bd5bb0bf252b8a7a46af322b00e64a1d43a"
+          }
+        }
+      ],
+      "width": 1024
+    },
+    {
+      "aa_tensor_and_png_exact": true,
+      "denoise_seconds": {
+        "max": 15.34276955097448,
+        "mean": 15.229538754501846,
+        "min": 15.11630795802921
+      },
+      "height": 2048,
+      "launcher_seconds": {
+        "max": 89.04237540002214,
+        "mean": 88.73600043953047,
+        "min": 88.4296254790388
+      },
+      "max_host_used_delta_gib": 5.962123870849609,
+      "max_process_tree_rss_gib": 6.469020843505859,
+      "max_process_tree_sum_vm_hwm_gib": 6.6827239990234375,
+      "max_single_gpu_vram_gib": 16.764957427978516,
+      "request_seconds": {
+        "max": 80.83706928702304,
+        "mean": 80.58066546151531,
+        "min": 80.32426163600758
+      },
+      "sample_count": 2,
+      "samples": [
+        {
+          "denoise_seconds": 15.34276955097448,
+          "evidence_sha256": {
+            "execution.json": "3b56792d6c7cfacfeb2dbf7acb7ff8364be1227d07791d7e5eb45b6a170c694f",
+            "monitor-summary.json": "062f280ee040dc14d90791415db674b5d75a80dec704b7655c0eba70dfa8ea1e",
+            "monitor.jsonl": "94a7a08723323457040f40cf954c6a13c066049591a3ba913a72265b71f45a8f",
+            "postflight.json": "6206666976f5f89ebc6afbdb8fd224b36df1e76b15a76b0169625cd2b5a00d71",
+            "result.json": "67c85f4b618fc56de8558a6a34e079d56b9d72aeb2f14cdea580c925742acdb2",
+            "summary.json": "09993b9c01ab53809fd0a3e87084cfb25c9171e572ba6f90005879674f661056"
+          },
+          "launcher_seconds": 89.04237540002214,
+          "peak_host_used_delta_bytes": 6401781760,
+          "peak_process_tree_rss_bytes": 6946058240,
+          "peak_process_tree_sum_vm_hwm_bytes": 7175520256,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 17120378880,
+            "5": 17915129856,
+            "6": 17915228160,
+            "7": 18001154048
+          },
+          "phase_seconds": {
+            "denoise_step": 15.34276955097448,
+            "dit_load": 28.759581870981492,
+            "save_png": 1.8648908950272016,
+            "text_encode_isolated_process": 29.746398903022055,
+            "vae_decode": 3.4366691900067963,
+            "vae_load": 1.0408149819704704
+          },
+          "png_sha256": "6f62fac137f4a5b331deb9ae524a70b3d1aeb97135cecbb93a3695d2b4824ffd",
+          "request_seconds": 80.83706928702304,
+          "run_id": "readme-native-2048-seed42-r1",
+          "started_at_utc": "2026-11-13T09:58:31.119282+00:00",
+          "strict_flash_dit_calls": 300,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "353e80b1c82e877a77dc4e32fc19d8fd22a419983840f1a506d7bdd8289bdbb6",
+            "latent-step-01.safetensors": "cb9de9ebb27bea3bacc6172822dc9e7bf450f94fb3fc633fc88bd0fcfa90105c",
+            "latent-step-02.safetensors": "2b5e68e59b2669865df8cf9aa8b88c9bfcd7c89aa52da3f92c2941cf1cd95182",
+            "latent-step-03.safetensors": "3407da6690ff551e56d4535201b5f29ee1b80cbba34aadfede43bd77e9582dd1",
+            "latent-step-04.safetensors": "f2c99a6ca1fc2e1eec32238040d7fddbfd57ccd6392ba2fd369ca40c6fea3d2f",
+            "latent-step-05.safetensors": "f8c3b84674c5aded952e806e1a25efc7d1fe851ae917dd046b58f34d9c0e7802",
+            "latent-step-06.safetensors": "f1df613b715b32764e4c72b3e841a4b1b349a0bf92c7449c7dd05408f5b5c702"
+          }
+        },
+        {
+          "denoise_seconds": 15.11630795802921,
+          "evidence_sha256": {
+            "execution.json": "a06c2a20a3c76f66bfeb5eee3ddb0ef4bec08370cf4f13d66f042318a2022187",
+            "monitor-summary.json": "c2817f265e5240d415f9e2d66d3c51881dd75464e908cbd7a13d6808f1292140",
+            "monitor.jsonl": "dac3d254f574ac2cf454f9daf9cab3489722bbc1ad4db3701543a143a124ce52",
+            "postflight.json": "fa8bdd1bbef12886ad97d4c721a46190a079f1070e1e3b68a60564ac9d2dc70f",
+            "result.json": "c4760d1f5f067e9cb411ff53f1f5aa003b77a183398feef0b783b88f20411904",
+            "summary.json": "41bcf1e2a4e8376542c7bf4257a92c574b31c2163c18235a7cdb5c3e387a4b65"
+          },
+          "launcher_seconds": 88.4296254790388,
+          "peak_host_used_delta_bytes": 6230716416,
+          "peak_process_tree_rss_bytes": 6922956800,
+          "peak_process_tree_sum_vm_hwm_bytes": 7162232832,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 17120444416,
+            "5": 17915101184,
+            "6": 17915199488,
+            "7": 18001235968
+          },
+          "phase_seconds": {
+            "denoise_step": 15.11630795802921,
+            "dit_load": 28.473550030961633,
+            "save_png": 1.8881363369873725,
+            "text_encode_isolated_process": 29.772548578039277,
+            "vae_decode": 3.421796748007182,
+            "vae_load": 1.0354556239908561
+          },
+          "png_sha256": "6f62fac137f4a5b331deb9ae524a70b3d1aeb97135cecbb93a3695d2b4824ffd",
+          "request_seconds": 80.32426163600758,
+          "run_id": "readme-native-2048-seed42-r2",
+          "started_at_utc": "2026-11-13T10:00:29.206980+00:00",
+          "strict_flash_dit_calls": 300,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "353e80b1c82e877a77dc4e32fc19d8fd22a419983840f1a506d7bdd8289bdbb6",
+            "latent-step-01.safetensors": "cb9de9ebb27bea3bacc6172822dc9e7bf450f94fb3fc633fc88bd0fcfa90105c",
+            "latent-step-02.safetensors": "2b5e68e59b2669865df8cf9aa8b88c9bfcd7c89aa52da3f92c2941cf1cd95182",
+            "latent-step-03.safetensors": "3407da6690ff551e56d4535201b5f29ee1b80cbba34aadfede43bd77e9582dd1",
+            "latent-step-04.safetensors": "f2c99a6ca1fc2e1eec32238040d7fddbfd57ccd6392ba2fd369ca40c6fea3d2f",
+            "latent-step-05.safetensors": "f8c3b84674c5aded952e806e1a25efc7d1fe851ae917dd046b58f34d9c0e7802",
+            "latent-step-06.safetensors": "f1df613b715b32764e4c72b3e841a4b1b349a0bf92c7449c7dd05408f5b5c702"
+          }
+        }
+      ],
+      "width": 2048
+    },
+    {
+      "aa_tensor_and_png_exact": true,
+      "denoise_seconds": {
+        "max": 67.36621289799223,
+        "mean": 67.34039211046183,
+        "min": 67.31457132293144
+      },
+      "height": 4096,
+      "launcher_seconds": {
+        "max": 152.59897157998057,
+        "mean": 152.3667995814758,
+        "min": 152.134627582971
+      },
+      "max_host_used_delta_gib": 6.0413360595703125,
+      "max_process_tree_rss_gib": 6.6483154296875,
+      "max_process_tree_sum_vm_hwm_gib": 6.679595947265625,
+      "max_single_gpu_vram_gib": 18.340465545654297,
+      "request_seconds": {
+        "max": 144.23829170502722,
+        "mean": 144.11889786549727,
+        "min": 143.99950402596733
+      },
+      "sample_count": 2,
+      "samples": [
+        {
+          "denoise_seconds": 67.31457132293144,
+          "evidence_sha256": {
+            "execution.json": "ca93fcdc34d5ca2e1de6aabdf49282ced5ace3b48839802bc3e3e3823f550607",
+            "monitor-summary.json": "9ac6c07cdda261f481c4544843b8d8b8d05deb88aed51e3805d42e16cde13f2b",
+            "monitor.jsonl": "7e5947ebfdd42e033b6b4c68f4b9c8484effa90509567d7bc0b977773b7e0ef8",
+            "postflight.json": "41d92b8ddc680aedb8b9e88c3108bb3aa6eb4e77404a0c45cd8878ff8489529a",
+            "result.json": "e3715f6daafaeb41f51551e5a8b17e122c4a575d56017ebdc356e3b6a6bb2c20",
+            "summary.json": "e30fcc3a36f153cba4231c7717f132fffb49ea38e60653ea2c5309cc7fe1b729"
+          },
+          "launcher_seconds": 152.59897157998057,
+          "peak_host_used_delta_bytes": 5991399424,
+          "peak_process_tree_rss_bytes": 7007469568,
+          "peak_process_tree_sum_vm_hwm_bytes": 7170994176,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 19056140288,
+            "5": 19609595904,
+            "6": 19609710592,
+            "7": 19692924928
+          },
+          "phase_seconds": {
+            "denoise_step": 67.31457132293144,
+            "dit_load": 28.698042264033575,
+            "save_png": 6.350303300016094,
+            "text_encode_isolated_process": 29.970511847990565,
+            "vae_decode": 10.204964930017013,
+            "vae_load": 1.027879309025593
+          },
+          "png_sha256": "5dbf521490a347facf6e2e71ddac12bdd040c79510fba11dc06090cf5ca5308c",
+          "request_seconds": 144.23829170502722,
+          "run_id": "readme-native-4096-seed42-r1",
+          "started_at_utc": "2026-11-13T10:02:11.662588+00:00",
+          "strict_flash_dit_calls": 300,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "971453d109ddc5d10fddac81554a7c3fd9299f2ddbb20d3f5fc6f8517d567611",
+            "latent-step-01.safetensors": "0941c4627ea7b8072fddc8d124107422cab40d2132a0be8057a56cacd7eaf3a7",
+            "latent-step-02.safetensors": "03d13b550a3fe82f1e01561b1a6c74bdc9450cdca45196959d17e9c884bd7b98",
+            "latent-step-03.safetensors": "cb93458902e463269e0e60710165ece5020dff56bcd5229ed6a89baf312fed06",
+            "latent-step-04.safetensors": "097fc9526c579cd587f9a0a2dee516b32e950aefa258d312ceef9846c24f83b2",
+            "latent-step-05.safetensors": "c00804d2ecec6f8ec02cc163a579c7252d38db1d40d0a47f437dd693811128fc",
+            "latent-step-06.safetensors": "c906e9f98c772ff79649185289751a3b4b1c056e59d69d6cfaf014583c2fab2b"
+          }
+        },
+        {
+          "denoise_seconds": 67.36621289799223,
+          "evidence_sha256": {
+            "execution.json": "1de00202dd64925197df9f538bf1cdc95c2f9ef7858f2089cba912aba979ff57",
+            "monitor-summary.json": "b854e9bd3ad1d22dee8f9a892ad0fbdc9894953d19c1db44b448393f8bf63c0a",
+            "monitor.jsonl": "da98dad828ff486ae380a16727bf291a99f0d471430768d8d2789092c3a1a912",
+            "postflight.json": "81d3afbf94ffa13c35b271b847e9f94f6a612d10b91f10dcf6a584f6d287b511",
+            "result.json": "c5bd5e719cb6dd565acfc00839a1e1b632ad1fed92f7961b8a404f0606090db7",
+            "summary.json": "e90b416211242eab6b02e93751acb4a3d3e235d6f388cbd55343626a960c45cd"
+          },
+          "launcher_seconds": 152.134627582971,
+          "peak_host_used_delta_bytes": 6486835200,
+          "peak_process_tree_rss_bytes": 7138574336,
+          "peak_process_tree_sum_vm_hwm_bytes": 7172161536,
+          "peak_vram_bytes_by_physical_gpu": {
+            "1": 19056652288,
+            "5": 19609997312,
+            "6": 19610107904,
+            "7": 19689111552
+          },
+          "phase_seconds": {
+            "denoise_step": 67.36621289799223,
+            "dit_load": 28.6687784580281,
+            "save_png": 6.376403336005751,
+            "text_encode_isolated_process": 30.30351634102408,
+            "vae_decode": 9.571718150982633,
+            "vae_load": 1.0289743220200762
+          },
+          "png_sha256": "5dbf521490a347facf6e2e71ddac12bdd040c79510fba11dc06090cf5ca5308c",
+          "request_seconds": 143.99950402596733,
+          "run_id": "readme-native-4096-seed42-r3",
+          "started_at_utc": "2026-11-13T10:06:49.621162+00:00",
+          "strict_flash_dit_calls": 300,
+          "tensor_sha256": {
+            "conditioning.safetensors": "13b7f21e3c83574e34d36bb9fa64d7ed000d20af9e1d34a4ca62769802b709a8",
+            "latent-initial.safetensors": "971453d109ddc5d10fddac81554a7c3fd9299f2ddbb20d3f5fc6f8517d567611",
+            "latent-step-01.safetensors": "0941c4627ea7b8072fddc8d124107422cab40d2132a0be8057a56cacd7eaf3a7",
+            "latent-step-02.safetensors": "03d13b550a3fe82f1e01561b1a6c74bdc9450cdca45196959d17e9c884bd7b98",
+            "latent-step-03.safetensors": "cb93458902e463269e0e60710165ece5020dff56bcd5229ed6a89baf312fed06",
+            "latent-step-04.safetensors": "097fc9526c579cd587f9a0a2dee516b32e950aefa258d312ceef9846c24f83b2",
+            "latent-step-05.safetensors": "c00804d2ecec6f8ec02cc163a579c7252d38db1d40d0a47f437dd693811128fc",
+            "latent-step-06.safetensors": "c906e9f98c772ff79649185289751a3b4b1c056e59d69d6cfaf014583c2fab2b"
+          }
+        }
+      ],
+      "width": 4096
+    }
+  ],
+  "schema_version": 1,
+  "suite": "R9700 original-precision matched resolution sweep"
+}

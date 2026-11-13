@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "purpose": "O5 original-precision 4K functional qualification matrix",
+  "width": 4096,
+  "height": 4096,
+  "steps": 6,
+  "cfg": 1.0,
+  "seeds": [
+    42,
+    314159
+  ],
+  "cases": [
+    {
+      "id": "product_photo",
+      "category": "photorealistic product and material detail",
+      "prompt": "A square studio product photograph of a handmade red fox plush toy sitting on a pale wooden table. The fox has soft burnt-orange fur, a cream muzzle and belly, two pointed ears, small dark glass eyes, and a thick curled tail with a white tip. A small blue ceramic cup stands to its left and three yellow daisies lie to its right. Behind the table is a softly blurred sage-green wall. Gentle afternoon sunlight enters from the upper left, revealing fine individual fabric fibers and neat stitched seams. The composition is centered and balanced, with natural soft shadows, realistic material texture, warm colors, and crisp detail on the fox. No text or watermark.",
+      "expected_elements": [
+        "red fox plush",
+        "blue ceramic cup",
+        "yellow daisies",
+        "pale wooden table",
+        "sage-green wall"
+      ]
+    },
+    {
+      "id": "architecture",
+      "category": "architectural geometry, reflections and depth",
+      "prompt": "A square high-end architectural photograph of a contemporary timber library courtyard at blue hour. Two low glass-and-wood reading pavilions face a narrow reflecting pool, joined by a slender stone footbridge. Warm interior lights reveal bookshelves through floor-to-ceiling windows. Young maple trees, textured concrete walls, rain-dark paving stones, and precise reflections create strong depth and clean geometry. The sky is deep cobalt, the scene is calm and unoccupied, and every beam, window mullion, leaf, and water ripple is sharply resolved. Natural perspective, realistic materials, no text, logo, or watermark.",
+      "expected_elements": [
+        "two timber and glass pavilions",
+        "reflecting pool",
+        "stone footbridge",
+        "warm bookshelves",
+        "blue-hour sky"
+      ]
+    },
+    {
+      "id": "illustration",
+      "category": "dense stylized illustration and small-object composition",
+      "prompt": "A square richly detailed storybook illustration of a compact yellow deep-sea research submarine exploring a bioluminescent coral valley. Through the round front window, two tiny scientists study a glowing specimen jar. Outside are layered blue rock arches, translucent jellyfish, red fan corals, silver fish, curling sea plants, and a distant hydrothermal vent. The submarine casts a warm cone of light through dark teal water, with bubbles and suspended particles creating depth. Painterly gouache texture, precise small details, harmonious jewel colors, clear silhouettes, no text, logo, border, or watermark.",
+      "expected_elements": [
+        "yellow research submarine",
+        "two scientists",
+        "glowing specimen jar",
+        "jellyfish and coral",
+        "warm light cone"
+      ]
+    }
+  ],
+  "gates": {
+    "all_outputs_finite": true,
+    "all_outputs_nonconstant": true,
+    "strict_flash_dit_calls_per_run": 300,
+    "visual_expected_elements_required": true,
+    "postflight_external_processes": 0,
+    "record_duration_vram_and_cpu_ram": true
+  }
+}

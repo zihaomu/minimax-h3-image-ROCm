@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "workload": "MiniMax-H3-Image original-precision text-to-image qualification",
+  "prompt": "A square studio product photograph of a handmade red fox plush toy sitting on a pale wooden table. The fox has soft burnt-orange fur, a cream muzzle and belly, two pointed ears, small dark glass eyes, and a thick curled tail with a white tip. A small blue ceramic cup stands to its left and three yellow daisies lie to its right. Behind the table is a softly blurred sage-green wall. Gentle afternoon sunlight enters from the upper left, revealing fine individual fabric fibers and neat stitched seams. The composition is centered and balanced, with natural soft shadows, realistic material texture, warm colors, and crisp detail on the fox. No text or watermark.",
+  "width": 2048,
+  "height": 2048,
+  "seed": 42,
+  "steps": 6,
+  "cfg": 1.0,
+  "text_encoder_process_isolation": true,
+  "sigmas": [
+    1.0,
+    0.9675236940383911,
+    0.8875485062599182,
+    0.75,
+    0.5327739119529724,
+    0.23200887441635132,
+    0.0
+  ],
+  "precision": {
+    "text_encoder": "released BF16",
+    "dit_main": "released BF16",
+    "dit_fp32_islands": "released FP32 input projection, time MLP, RoPE source and output heads",
+    "dit_qkv_layout": "released raw head-major rows explicitly permuted to component-major Q|K|V rows consumed by the independent Comfy compute modules",
+    "dit_time_embedding_handoff": "FP32 time MLP and SiLU, then BF16 AdaLN projection, matching the released Diffusers Image path",
+    "conditioning_stage_boundary": "text encoder runs in a disposable GPU process; a hash-verified BF16 CPU safetensors artifact is the process boundary before clean-process DiT placement",
+    "pdd_heads": "released FP32 absolute heads",
+    "scheduler": "FP32 velocity Euler",
+    "vae": "released FP32"
+  },
+  "qualification_gates": {
+    "four_static_vs_single_offload": {
+      "conditioning_exact": true,
+      "initial_noise_exact": true,
+      "each_step_relative_l2_max": 1e-6,
+      "each_step_max_absolute": 1e-5,
+      "strict_flash_dit_calls": 300,
+      "output_sha256_match_is_informational": true,
+      "visual_semantic_check_required": true
+    }
+  },
+  "attention_policy": "fail if the large DiT attention cannot use PyTorch FLASH_ATTENTION",
+  "guidance_branch": false
+}
