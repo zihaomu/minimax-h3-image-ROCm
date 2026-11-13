@@ -23,7 +23,7 @@ Start with the [project overview and performance table](../README.md), then foll
 | [Frozen release report](releases/v0.1.0-image-int8-first-image.md) | Evidence associated with tag `v0.1.0-image-int8-first-image` |
 | [Release manifest](../configs/releases/v0.1.0-image-int8-first-image.json) | Machine-readable identity of the frozen INT8 snapshot |
 
-Historical reports retain their original language and results. Their precision and workload differ from the current four-card original-precision benchmark.
+Historical reports on `main` are available in English and preserve their original measurements and validation scope. Their precision and workload differ from the current four-card original-precision benchmark. Report hashes in the frozen release manifest identify the original files at the release tag; the English translations on `main` have different file hashes.
 
 ## Local development records
 

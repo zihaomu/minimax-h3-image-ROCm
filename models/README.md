@@ -1,21 +1,30 @@
-# 模型来源与固定版本
+# Model sources and pinned revisions
 
-权重下载到本目录对应子目录；Git 只跟踪本说明文件，权重、partial、下载缓存及本地校验报告均不进入仓库。当前四卡原始精度 4K 路线使用第一组模型；下方 INT8 ConvRot 组合仅保留为历史基线。
+The current four-GPU pipeline uses the original BF16/FP32 components listed below. The INT8 ConvRot components are retained for the historical single-GPU baseline.
 
-## 当前：官方原始 BF16/FP32 组件
+[Original components](#original-bf16fp32-components) · [Historical INT8 components](#historical-int8-convrot-components) · [Setup guide](../docs/QUICKSTART.md)
 
-| 组件 | 固定来源 | 本地目录 | 文件数 / bytes |
+Download weights into the corresponding subdirectories under `models/`. Only this README is tracked by Git; weights, partial downloads, caches, and local verification reports stay outside the repository. Model paths in the tables and checksum lists are relative to `models/`.
+
+## Original BF16/FP32 components
+
+| Component | Pinned source | Local directory | Files / bytes |
 |---|---|---|---:|
-| DiT、PDD、scheduler、tokenizer、FP32 VAE | [MiniMaxAI/MiniMax-H3-Image@5f904730](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/tree/5f90473023975e6271b0ed1dd84c4e88e4bbc6d3) | `native/minimax-h3-image/` | 26 / 68,639,995,438 |
-| Image 实际消费的文本编码器前 50 层 | [MiniMaxAI/MiniMax-H3@0919fb68/text_encoder](https://huggingface.co/MiniMaxAI/MiniMax-H3/tree/0919fb684102ef115126612f3fbb84d1027e7317/text_encoder) | `native/minimax-h3/` | 14 / 53,692,351,605 |
+| DiT, PDD heads, scheduler, tokenizer, and FP32 VAE | [MiniMaxAI/MiniMax-H3-Image@5f904730](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/tree/5f90473023975e6271b0ed1dd84c4e88e4bbc6d3) | `native/minimax-h3-image/` | 26 / 68,639,995,438 |
+| Text-encoder files covering the first 50 layers consumed by Image | [MiniMaxAI/MiniMax-H3@0919fb68/text_encoder](https://huggingface.co/MiniMaxAI/MiniMax-H3/tree/0919fb684102ef115126612f3fbb84d1027e7317/text_encoder) | `native/minimax-h3/` | 14 / 53,692,351,605 |
 
-合计 40 个文件、122,332,347,043 bytes。下载器只接受上述两个固定 revision，支持分段续传，下载后逐文件核对上游 LFS SHA256，并对 safetensors header/data offset 做结构检查：
+The selected download contains **40 files totaling 122,332,347,043 bytes**. Run this command from the project root:
 
 ```bash
 python3 tools/download_native_models.py --workers 8 --chunk-mib 64
 ```
 
-完整 40 文件的本地验证报告写到被忽略的 `models/.download/native/verification.json`。以下固定的是实际权重文件 SHA256；配置、索引、tokenizer 和 LICENSE 同样在本地报告中逐文件核验。
+The downloader accepts only the two pinned revisions above, supports resumable range downloads, checks each weight file against its upstream LFS SHA256, and validates safetensors headers and data offsets. The local report for all 40 files is written to the ignored `models/.download/native/verification.json`; it also records verification of configuration, index, tokenizer, and LICENSE files.
+
+The text-encoder download intentionally stops at shard 11. Image reads the hidden state after layer 50, so the selected shards cover the embedding and all consumed layers 0–49. Later, unused layers are not required for this text-to-image path.
+
+<details>
+<summary>Original weight SHA256 checksums</summary>
 
 ```text
 c07093a098e3bef4d43cd29c33e239a0c45424c5ff40dfcc864df00b8d664738  native/minimax-h3-image/pdd_fused_heads.safetensors
@@ -45,23 +54,23 @@ aded5a4d1d5e22dbd8b6f79266b6eb88c840411b09527c53917a1419ace22e2f  native/minimax
 3820ffe8d8d6477f6fe8d614ef3c87abb264ee39accebf43a1507b970d80946f  native/minimax-h3/text_encoder/model-00011-of-00014.safetensors
 ```
 
-只下载到第 11 个文本编码器 shard 是有意设计：Image 路径读取第 50 层 hidden state，上述固定集合已覆盖 embedding 与实际消费的 layers 0–49；没有把未消费的后续层冒充运行依赖。
+</details>
 
-## 历史：ComfyUI INT8 ConvRot 组合
+## Historical INT8 ConvRot components
 
-- 原始模型：[MiniMaxAI/MiniMax-H3-Image](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image)
-- 权重仓库：[Comfy-Org/MiniMax-H3-Image](https://huggingface.co/Comfy-Org/MiniMax-H3-Image)
-- 固定 revision：`0bb149f51e3156ed4b90dd45d5620346bfe1df8f`
+- Original model: [MiniMaxAI/MiniMax-H3-Image](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image)
+- Repacked weights: [Comfy-Org/MiniMax-H3-Image](https://huggingface.co/Comfy-Org/MiniMax-H3-Image)
+- Pinned revision: `0bb149f51e3156ed4b90dd45d5620346bfe1df8f`
 
-| 组件 | 本地相对路径（相对于 models/） | 大小 GB / GiB | 固定下载链接 |
+| Component | Local path | Size, GB / GiB | Pinned download |
 |---|---|---:|---|
-| 生成主模型（INT8 ConvRot） | `diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors` | 20.98 / 19.54 | [下载](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors) |
-| 文本／参考图编码器（INT8 ConvRot） | `text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors` | 27.14 / 25.28 | [下载](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors) |
-| 图片 VAE（FP16） | `vae/minimax_h3_image_vae_fp16.safetensors` | 1.17 / 1.09 | [下载](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/vae/minimax_h3_image_vae_fp16.safetensors) |
+| DiT (INT8 ConvRot) | `diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors` | 20.98 / 19.54 | [Download](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors) |
+| Text/reference-image encoder (INT8 ConvRot) | `text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors` | 27.14 / 25.28 | [Download](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors) |
+| Image VAE (FP16) | `vae/minimax_h3_image_vae_fp16.safetensors` | 1.17 / 1.09 | [Download](https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/vae/minimax_h3_image_vae_fp16.safetensors) |
 
-合计 **49,289,162,266 bytes = 49.29 GB = 45.90 GiB**。大小以固定 revision 的文件元数据为准；这是磁盘文件大小，不是运行时显存。
+The three files total **49,289,162,266 bytes = 49.29 GB = 45.90 GiB**. Sizes come from file metadata at the pinned revision and describe disk storage, not runtime VRAM.
 
-## SHA256
+### Historical weight SHA256 checksums
 
 ```text
 83eb140f1ff95c068f8a6886e6d3f3d0d4ab2e07bb2fe6d2ef992a51146ee622  diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors
@@ -69,8 +78,10 @@ bc2ced0fbea64757fa9acddccfc0b3f4819d1dcf1da6c124d690d368be283923  text_encoders/
 d80e9c2e5cfc9844869961ff5a58c9a9e52182df6bfb30b26018dd7f348721af  vae/minimax_h3_image_vae_fp16.safetensors
 ```
 
-## 使用范围
+## Usage and validation scope
 
-- 第一阶段使用以上三个组件，直接输入固定 prompt；可选 prompt enhancer 不属于此次下载。
-- 编码器名称必须是 `int8_convrot`，图片 VAE 必须是 `minimax_h3_image_vae_fp16`。
-- 下载文件的尺寸、SHA256 和 safetensors 结构校验，不等于已完成 R9700 推理验证。
+- The historical first-image workflow uses the three INT8/FP16 components with a fixed prompt. The optional prompt enhancer is outside that download.
+- For that workflow, use the `int8_convrot` encoder and `minimax_h3_image_vae_fp16` VAE variants.
+- File-size, SHA256, and safetensors structure checks establish download integrity. Inference qualification is documented separately in the [current original-precision benchmark](../docs/benchmarks/R9700_NATIVE_RESOLUTIONS.md) and the [historical INT8 release](../docs/releases/v0.1.0-image-int8-first-image.md).
+
+See [source and license identities](../docs/NATIVE_SOURCES.md) for the pinned upstream license files.

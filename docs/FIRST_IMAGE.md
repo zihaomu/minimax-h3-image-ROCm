@@ -1,35 +1,37 @@
-# R9700 单卡首图验证
+# R9700 single-GPU first-image validation
 
-2026-11-13，独立 ComfyUI 环境完成一个 2048×2048、6 步、CFG 1 的完整文生图请求。原生 ComfyUI 执行器使用固定 INT8 ConvRot DiT/编码器和 FP16 Image VAE，未接入自有 Attention、多卡代码或 vLLM-Omni。
+This is an English translation of the historical INT8 first-image report. Its results and validation scope describe that request. The frozen release manifest's report SHA256 identifies the [original file at the release tag](https://github.com/zihaomu/minimax-h3-image-ROCm/blob/v0.1.0-image-int8-first-image/docs/FIRST_IMAGE.md), rather than this translated copy on `main`.
 
-环境：ComfyUI v0.45.0 固定提交、ROCm 10.1、Torch `2.14.0+rocm10.1.0`、Triton `3.8.0+git669b31ac.rocm10.1.0`。comfy-kitchen 0.2.41 和 comfy-aimdo 0.6.0 从固定源码重新编译。使用物理 GPU1，Radeon AI PRO R9700，gfx1201；开启原生 DynamicVRAM 与异步权重卸载。精确身份见 [运行时锁](../configs/runtime-lock.json)。
+On 2026-11-13, the independent ComfyUI environment completed one 2048×2048 text-to-image request with six steps and CFG=1. The native ComfyUI executor used pinned INT8 ConvRot DiT/encoder weights and the FP16 Image VAE. Custom Attention, multi-GPU code, and vLLM-Omni were not part of this request.
 
-## 结果
+Environment: ComfyUI v0.45.0 at its pinned commit, ROCm 10.1, Torch `2.14.0+rocm10.1.0`, and Triton `3.8.0+git669b31ac.rocm10.1.0`. comfy-kitchen 0.2.41 and comfy-aimdo 0.6.0 were rebuilt from pinned sources. The request used a Radeon AI PRO R9700, gfx1201, recorded as physical GPU1, with native DynamicVRAM and asynchronous weight offload enabled. See the [runtime lock](../configs/runtime-lock.json) for exact identities.
 
-本地 run ID：`p2-first-image-2048-r2`。seed 42，batch 1，euler/simple，denoise 1；详细 prompt 描述狐狸毛绒玩具、蓝色杯子和黄色花朵。图片尺寸正确，保留的浮点张量均为有限值，执行了六个采样回调；目视检查显示主要物体和材质符合提示，无明显空白或损坏。此检查不证明通用图像质量或数值精度。
+## Results
 
-| 指标 | 本次观测 |
+Local run ID: `p2-first-image-2048-r2`. The request used seed 42, batch 1, euler/simple, and denoise=1, with a detailed prompt describing a fox plush toy, a blue cup, and yellow flowers. The output dimensions were correct, retained floating-point tensors were finite, and six sampling callbacks executed. Visual inspection found the main objects and materials consistent with the prompt, with no obvious blank or corrupted output. This inspection does not establish general image quality or numerical accuracy.
+
+| Metric | Observed value |
 |---|---:|
-| 完整工作流请求 | 17.642 秒 |
-| 文本 conditioning，包含阶段加载 | 5.274 秒 |
-| KSampler，包含加载和诊断记录 | 9.294 秒 |
-| VAE decode，包含阶段加载 | 1.673 秒 |
-| PNG 保存节点 | 0.497 秒 |
-| 整卡 VRAM 采样峰值 | 31.618 GiB |
-| 进程主机内存峰值 RSS | 2.857 GiB |
+| Full workflow request | 17.642 s |
+| Text conditioning, including stage loading | 5.274 s |
+| KSampler, including loading and diagnostics | 9.294 s |
+| VAE decode, including stage loading | 1.673 s |
+| PNG save node | 0.497 s |
+| Sampled whole-card VRAM peak | 31.618 GiB |
+| Peak process RSS | 2.857 GiB |
 
-请求时间从执行器调用开始，到图片保存完成并同步 GPU；不含容器和应用启动。该请求带张量捕获、节点边界同步、dispatch 计数，以及每个相关节点首个 SDPA 调用的 CPU profiler 记录，属于首图功能检查，不是热请求性能基线。此前有一个编码阶段中断的尝试，文件系统缓存状态未清空。阶段时间不包含全部节点间诊断开销，不能简单相加替代端到端时间。
+Request timing starts at the executor call and ends after image saving and GPU synchronization; container and application startup are excluded. The request includes tensor capture, synchronization at node boundaries, dispatch counting, and CPU profiling of the first SDPA call in each relevant node. It is an instrumented first-image functional check. An earlier attempt was interrupted during encoding, and the filesystem cache was not cleared. Stage times omit some diagnostics between nodes and cannot simply be added to obtain end-to-end time.
 
-VRAM 从 sysfs 约每两秒采样，观测峰值为 33,949,990,912 bytes，并非连续测得的真实峰值。DynamicVRAM 的权重分配不能仅靠 Torch allocator 统计衡量：本次 Torch allocated 峰值约 0.601 GiB，但整卡显存已接近可用容量。不可据此推断长 prompt、编辑或 4K 同样可行。
+VRAM was sampled from sysfs approximately every two seconds. The observed peak was 33,949,990,912 bytes; shorter transients may have been missed. Torch allocator statistics do not cover all DynamicVRAM weight allocations: the observed Torch allocated peak was approximately 0.601 GiB while whole-card VRAM was close to capacity. These figures do not establish feasibility for longer prompts, editing, or 4K.
 
-记录到 1,200 次 `int8_linear` 经 comfy-kitchen HIP dispatch，另有 350 次 INT8 ConvRot 权重反量化调用。INT8 是权重格式及部分计算路径，不代表所有层和 Attention 都执行 INT8。抽查到文本编码首个 SDPA 调用使用 efficient-attention，采样和 VAE 节点首个 SDPA 调用使用 flash-attention；记录只覆盖各节点首次调用，不能外推为所有形状的完整内核覆盖。
+The request recorded 1,200 `int8_linear` calls through comfy-kitchen HIP dispatch and 350 INT8 ConvRot weight-dequantization calls. INT8 describes the weight format and part of the computation path; some layers and Attention use floating-point computation. The sampled first SDPA call used efficient-attention in text encoding and flash-attention in sampling and VAE nodes. Only the first call in each relevant node was recorded, so this does not establish kernel coverage for all calls or shapes.
 
-PNG SHA256：`83b075e1aa8deca8bc8e8fed4f08d3b0bc078fde91617370282ed12d5e9d9c3f`。
+PNG SHA256: `83b075e1aa8deca8bc8e8fed4f08d3b0bc078fde91617370282ed12d5e9d9c3f`.
 
-## 验证范围
+## Validation scope at the time of the report
 
-P1 已通过；P2 的首张完整图片已通过。A/A 重复性、至少三类 prompt × 两个 seed、无 profiler 热请求统计、编辑和高精度控制尚未完成。自有计算后端、双卡和四卡尚未验证。
+P1 environment qualification passed, and the first complete P2 image passed. A/A reproducibility, at least three prompt categories × two seeds, unprofiled warm-request statistics, editing, and higher-precision controls had not been completed for this baseline. The custom compute backend, dual-GPU execution, and four-GPU execution had not yet been validated.
 
-任务结束后容器退出、预约释放，GPU1 无本实验残留 KFD 进程。首轮资源监控中断的记录保留；监控现按容器 cgroup 识别新进程，CPU 回归检查覆盖归属识别与外部进程阻止。
+After the request, the container exited, the reservation was released, and no owned KFD processes remained on the selected GPU. Evidence from the initial resource-monitoring interruption was retained. The monitor now identifies new owned processes by container cgroup; CPU regression fixtures cover ownership classification and rejection of external GPU use.
 
-复现入口见 [QUICKSTART](QUICKSTART.md)。原始输出、张量与日志仅保存在本地 `runs/`。
+See [QUICKSTART](QUICKSTART.md) for current reproduction guidance and the [frozen release report](releases/v0.1.0-image-int8-first-image.md) for the historical checkout. Raw outputs, tensors, and logs remain in local `runs/` directories.

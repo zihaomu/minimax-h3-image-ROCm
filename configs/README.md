@@ -30,3 +30,5 @@ Original model revisions and checksums are in [`models/README.md`](../models/REA
 | [`releases/v0.1.0-image-int8-first-image.json`](releases/v0.1.0-image-int8-first-image.json) | Manifest for the frozen first-image release |
 
 Historical inputs remain associated with their original precision and validation scope. The [current benchmark](../docs/benchmarks/R9700_NATIVE_RESOLUTIONS.md) records hashes of the configuration and runtime files used for its measurements.
+
+The frozen release manifest's report hashes refer to the original Markdown files at tag `v0.1.0-image-int8-first-image`. The reports on `main` are English translations; use the tagged files when verifying those historical report hashes.
