@@ -1,0 +1,51 @@
+# Local plans, research, models, environments and experiment evidence
+/vibe/
+/research/
+/models/
+/.runtime/
+/runs/
+/archive/
+/.standard-opt-state/
+/.cache/
+/.deps/
+/.tools/
+/.venv/
+/venv/
+/outputs/
+
+# Private local overrides and credentials
+.env
+.env.*
+!.env.example
+*.local.json
+*.local.yaml
+*.local.toml
+
+# Build products and Python caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.so
+*.hsaco
+*.o
+*.a
+
+# Weights, raw tensors and profiler databases
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.npy
+*.npz
+*.pftrace
+*.rocpd
+*.sqlite
+*.sqlite3
+*.log
+core
+core.*
+.DS_Store

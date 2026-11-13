@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "planned_not_project_qualified",
+  "foundation": {
+    "profile": "rocm10-foundation-r9700-v1",
+    "image_id": "sha256:a79c374ab2bc93c0e4358da6c7bda5cb84cf1308e8aff74fc99fc95c511cbd03",
+    "rocm_release": "10.1.0",
+    "python": "3.13.13",
+    "torch": "2.14.0+rocm10.1.0",
+    "triton": "3.8.0+git669b31ac.rocm10.1.0",
+    "hip_build": "7.16.26385",
+    "gpu_architecture": "gfx1201"
+  },
+  "application": {
+    "comfyui_repository": "https://github.com/Comfy-Org/ComfyUI",
+    "comfyui_candidate_tag": "v0.45.0",
+    "comfyui_candidate_commit": "989d93d0d968e704c589ce0146bb18c77f6b50cc",
+    "workflow_templates_minimum": "0.11.104",
+    "resolved_dependencies": null,
+    "native_extensions": null
+  },
+  "execution": {
+    "workspace_launcher": "../rocm10-launch.sh",
+    "excluded_physical_gpu_ids": [3],
+    "actual_devices": null,
+    "shared_reservations_required": true,
+    "project_private_caches_required": true
+  },
+  "qualification": {
+    "environment": "not_run",
+    "single_gpu_image": "not_run",
+    "dual_gpu_image": "not_run",
+    "four_gpu_image": "not_run"
+  }
+}
