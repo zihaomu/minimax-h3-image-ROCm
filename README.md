@@ -1,5 +1,9 @@
 # MiniMax H3-Image on AMD ROCm
 
+> **Archived: development has moved to [AMD-AIM/minimax-h3-image-ROCm](https://github.com/AMD-AIM/minimax-h3-image-ROCm).**
+>
+> This repository is retained as a historical archive. Use [`main`](https://github.com/AMD-AIM/minimax-h3-image-ROCm/tree/main) for the current original-precision BF16/FP32 pipeline, or [`int8`](https://github.com/AMD-AIM/minimax-h3-image-ROCm/tree/int8) for the single-GPU INT8 ConvRot baseline. Please open new issues and pull requests in the AMD-AIM repository.
+
 Run **MiniMax-H3-Image at its original BF16/FP32 precision on four AMD Radeon AI PRO R9700 GPUs**. This project provides an independent image inference backend built on pinned ComfyUI modules, with explicit CPU offload, multi-GPU layer placement, and reproducible resource measurements.
 
 **Native 4K · Official six-step schedule · No weight quantization · AMD RDNA4**
