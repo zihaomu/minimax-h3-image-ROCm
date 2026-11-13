@@ -1,7 +1,9 @@
 # Local plans, research, models, environments and experiment evidence
 /vibe/
 /research/
-/models/
+# Only the model source/link document is public; all other contents stay local.
+/models/*
+!/models/README.md
 /.runtime/
 /runs/
 /archive/

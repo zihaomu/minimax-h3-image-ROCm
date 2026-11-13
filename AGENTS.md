@@ -20,7 +20,9 @@ Follow the parent workspace AMD environment rules and `vibe/PLAN.md`. Read
   Freeze numerical policy before evaluating candidates; retain failed evidence.
 - `vibe/` and `research/` are local-only and must never enter public commits or
   their ancestor history. Keep local plans, state and source audits there.
-  `models/`, `.runtime/`, `runs/`, raw tensors/traces and credentials are local.
+  Model weights, `.runtime/`, `runs/`, raw tensors/traces and credentials are local.
+  Under `models/`, only `README.md` with source links/revisions/checksums is public;
+  all downloaded weights, partial downloads and local download metadata stay ignored.
   Publish only deliberately prepared source/configuration and public docs.
   Do not copy the sibling's protected research/archive tree into public commits.
 - Sync reviewed project source/docs/configuration to the user-designated
