@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "tag": "v0.1.0-image-int8-first-image",
+  "date": "2026-11-13",
+  "status": "frozen_instrumented_single_gpu_first_image",
+  "source": {
+    "inference_code_commit": "9fdd0987c0fa0aac474337150608b81e91603145",
+    "inference_file_sha256": {
+      "tools/run_image.py": "85d00067b8f18d8eaf8fa7359b6716034ef5281611a8d9ae1881ef8b9ffc27f5",
+      "tools/comfy_runtime.py": "0c659d8d0af2b68591071714a77f0bb15142f5182f3b9d71e60ca4ebd5c253d7",
+      "configs/workflows/t2i_2048_api.json": "b2e7e76a4fafbe364f8fa78e9bfeb1a68378b0009eca853c988f2deeaaedd908"
+    },
+    "source_record_scope": "Inference runner, bootstrap and workflow, unchanged since the successful request. Recorded after completion.",
+    "release_changes": "Documentation and freeze manifest only; inference source, workflow and runtime lock retained."
+  },
+  "environment": {
+    "foundation": {
+      "profile": "rocm10-foundation-r9700-v1",
+      "image_id": "sha256:a79c374ab2bc93c0e4358da6c7bda5cb84cf1308e8aff74fc99fc95c511cbd03",
+      "rocm_release": "10.1.0",
+      "python": "3.13.13",
+      "torch": "2.14.0+rocm10.1.0",
+      "triton": "3.8.0+git669b31ac.rocm10.1.0",
+      "hip_build": "7.16.26385",
+      "gpu_architecture": "gfx1201"
+    },
+    "comfyui_commit": "989d93d0d968e704c589ce0146bb18c77f6b50cc",
+    "comfyui_version": "0.45.0",
+    "runtime_lock": {
+      "path": "configs/runtime-lock.json",
+      "sha256": "794523a4e4bf6e1a941db83c22b2163dcdb5d098dfa6cc3891414a4ce0e0de4e"
+    },
+    "application_dependencies": {
+      "path": "configs/requirements-image.lock",
+      "sha256": "c44351fe7dad08d672406eee5fda72eb4492a918d51a8506f077c1e8872ee6db"
+    }
+  },
+  "hardware": {
+    "gpu_model": "AMD Radeon AI PRO R9700",
+    "architecture": "gfx1201",
+    "gpu_count": 1,
+    "physical_gpu_in_record": 1
+  },
+  "models": [
+    {
+      "component": "dit",
+      "path": "diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors",
+      "sha256": "83eb140f1ff95c068f8a6886e6d3f3d0d4ab2e07bb2fe6d2ef992a51146ee622",
+      "size_bytes": 20979314802,
+      "repository": "Comfy-Org/MiniMax-H3-Image",
+      "revision": "0bb149f51e3156ed4b90dd45d5620346bfe1df8f",
+      "download_url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors"
+    },
+    {
+      "component": "text_encoder",
+      "path": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "sha256": "bc2ced0fbea64757fa9acddccfc0b3f4819d1dcf1da6c124d690d368be283923",
+      "size_bytes": 27141342152,
+      "repository": "Comfy-Org/MiniMax-H3-Image",
+      "revision": "0bb149f51e3156ed4b90dd45d5620346bfe1df8f",
+      "download_url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+    },
+    {
+      "component": "vae",
+      "path": "vae/minimax_h3_image_vae_fp16.safetensors",
+      "sha256": "d80e9c2e5cfc9844869961ff5a58c9a9e52182df6bfb30b26018dd7f348721af",
+      "size_bytes": 1168505312,
+      "repository": "Comfy-Org/MiniMax-H3-Image",
+      "revision": "0bb149f51e3156ed4b90dd45d5620346bfe1df8f",
+      "download_url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/0bb149f51e3156ed4b90dd45d5620346bfe1df8f/vae/minimax_h3_image_vae_fp16.safetensors"
+    }
+  ],
+  "model_verification": {
+    "download_time_full_sha256": "passed_for_all_three_files",
+    "release_check": "Existing verification record, pinned manifest, and local file sizes matched; no new full-weight SHA256 scan.",
+    "upstream_fixed_revision_size_and_sha256": "matched_for_all_three_files_via_Hugging_Face_metadata"
+  },
+  "workload": {
+    "task": "text_to_image",
+    "width": 2048,
+    "height": 2048,
+    "batch_size": 1,
+    "seed": 42,
+    "steps": 6,
+    "cfg": 1.0,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "denoise": 1.0,
+    "prompt_expander": false,
+    "workflow": {
+      "path": "configs/workflows/t2i_2048_api.json",
+      "sha256": "b2e7e76a4fafbe364f8fa78e9bfeb1a68378b0009eca853c988f2deeaaedd908"
+    }
+  },
+  "execution": {
+    "engine": "Native ComfyUI PromptExecutor",
+    "dit_weight_precision": "INT8 ConvRot",
+    "text_encoder_weight_precision": "INT8 ConvRot",
+    "vae_weight_precision": "FP16",
+    "runtime_compute": "Mixed floating-point and INT8 operations; not all-INT8 execution.",
+    "dynamic_vram": true,
+    "async_weight_offload": true,
+    "node_result_cache": false,
+    "comfy_compiler": false,
+    "instrumentation": [
+      "node-boundary synchronization",
+      "tensor capture",
+      "dispatch counts",
+      "CPU profiler on the first SDPA call of each relevant node"
+    ]
+  },
+  "measurement": {
+    "run_id": "p2-first-image-2048-r2",
+    "scope": "instrumented first complete request; not a warm performance baseline",
+    "successful_sample_count": 1,
+    "request_seconds": 17.641757542965934,
+    "stages_seconds": {
+      "text_conditioning": 5.273792789026629,
+      "sampler": 9.293759332969785,
+      "vae_decode": 1.673191545996815,
+      "png_save": 0.49727527296636254
+    },
+    "whole_gpu_vram_sampled_peak_bytes": 33949990912,
+    "vram_sampling_interval_seconds_approx": 2,
+    "torch_peak_allocated_bytes": 645186560,
+    "torch_peak_reserved_bytes": 970981376,
+    "host_rss_peak_kib": 2995340,
+    "timing_boundary": "Executor invocation through saved image and GPU synchronization; excludes container/application startup; includes instrumentation.",
+    "stages_are_additive": false,
+    "warm_latency_median_seconds": null,
+    "concurrent_images_per_minute": null,
+    "cache_note": "An earlier interrupted attempt preceded this request; filesystem caches were not cleared."
+  },
+  "evidence": {
+    "run_id": "p2-first-image-2048-r2",
+    "raw_evidence_published": false,
+    "sha256": {
+      "result.json": "c7daf4c439ac1cbcb23df43e3b1eda2c0c4d751e53d3a5e1ae1036e4c0eccb1c",
+      "workflow_api.json": "b2e7e76a4fafbe364f8fa78e9bfeb1a68378b0009eca853c988f2deeaaedd908",
+      "inference-source-manifest.json": "cef6fada4751ebfb23d7643ad4269c9354c6f9a13b1736dfd58d2baaa02544c1",
+      "monitor.jsonl": "671231be0ab7e00a943dda7aea2e32c47a36b06d46074c4682ad6fb1e9e060d1",
+      "execution.json": "d31ae03e5c12f79917b2a23e5853f82283c9ce6b7004611fe1aefedc8f5dea4f",
+      "validation.json": "ed9c9cc3bac4ea6761a245eca69b4861f0811f24ff92abf7441193749e5e3c7f"
+    },
+    "output_png_sha256": "83b075e1aa8deca8bc8e8fed4f08d3b0bc078fde91617370282ed12d5e9d9c3f",
+    "output_dimensions": [
+      2048,
+      2048
+    ]
+  },
+  "qualification": {
+    "environment": "passed",
+    "single_2048_six_step_image": "passed",
+    "saved_tensors_finite": "passed",
+    "AA_reproducibility": "not_qualified",
+    "multi_prompt_quality": "not_qualified",
+    "uninstrumented_warm_performance": "not_qualified",
+    "native_bf16_comparison": "not_run",
+    "no_cpu_offload": "not_qualified",
+    "tp2": "not_run",
+    "four_gpu": "not_run",
+    "4096_image": "not_run",
+    "image_editing": "not_run"
+  },
+  "reports": [
+    {
+      "path": "docs/releases/v0.1.0-image-int8-first-image.md",
+      "sha256": "3e6005d0b3421c04d9b76ab69f182676b451b869556fd0ce1b287a6481564723"
+    },
+    {
+      "path": "docs/FIRST_IMAGE.md",
+      "sha256": "646c3a34d37b91d2adcfca4e9d4d29c6d6c43618f436413d8dd66409d5320bd1"
+    }
+  ],
+  "release_validation": {
+    "gpu_ownership_cpu_tests": 3,
+    "gpu_tests_rerun": false
+  }
+}

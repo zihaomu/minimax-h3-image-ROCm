@@ -4,6 +4,7 @@
 
 **当前状态：独立 ROCm 10.1 环境已通过检查，单张 R9700 已完成首个 2048×2048、6 步文生图请求。完整基线、自有后端及多卡实现仍待验证。**
 
+- [冻结版本 v0.1.0-image-int8-first-image](docs/releases/v0.1.0-image-int8-first-image.md)：单卡 INT8 首图请求 **17.642 秒**；包含诊断开销，属于一次功能观测。
 - [环境准备与复现命令](docs/QUICKSTART.md)
 - [首图结果与测量范围](docs/FIRST_IMAGE.md)
 - [实际环境锁](configs/runtime-lock.json) / [应用依赖锁](configs/requirements-image.lock)
