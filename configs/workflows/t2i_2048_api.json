@@ -1,0 +1,10 @@
+{
+  "1": {"class_type": "UNETLoader", "inputs": {"unet_name": "minimax_h3_image_pruned_int8_convrot.safetensors", "weight_dtype": "default"}},
+  "2": {"class_type": "CLIPLoader", "inputs": {"clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors", "type": "minimax", "device": "default"}},
+  "3": {"class_type": "VAELoader", "inputs": {"vae_name": "minimax_h3_image_vae_fp16.safetensors"}},
+  "5": {"class_type": "MiniMaxH3ImageConditioning", "inputs": {"clip": ["2", 0], "prompt": "A square studio product photograph of a handmade red fox plush toy sitting on a pale wooden table. The fox has soft burnt-orange fur, a cream muzzle and belly, two pointed ears, small dark glass eyes, and a thick curled tail with a white tip. A small blue ceramic cup stands to its left and three yellow daisies lie to its right. Behind the table is a softly blurred sage-green wall. Gentle afternoon sunlight enters from the upper left, revealing fine individual fabric fibers and neat stitched seams. The composition is centered and balanced, with natural soft shadows, realistic material texture, warm colors, and crisp detail on the fox. No text or watermark.", "width": 2048, "height": 2048}},
+  "6": {"class_type": "ConditioningZeroOut", "inputs": {"conditioning": ["5", 0]}},
+  "7": {"class_type": "KSampler", "inputs": {"model": ["1", 0], "seed": 42, "steps": 6, "cfg": 1.0, "sampler_name": "euler", "scheduler": "simple", "positive": ["5", 0], "negative": ["6", 0], "latent_image": ["5", 1], "denoise": 1.0}},
+  "8": {"class_type": "VAEDecode", "inputs": {"samples": ["7", 0], "vae": ["3", 0]}},
+  "9": {"class_type": "SaveImage", "inputs": {"images": ["8", 0], "filename_prefix": "minimax_h3_image_2048_seed42"}}
+}

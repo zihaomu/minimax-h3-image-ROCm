@@ -1,0 +1,11 @@
+{
+  "package": "comfyui-workflow-templates",
+  "version": "0.11.105",
+  "json_package": "comfyui-workflow-templates-json",
+  "json_package_version": "0.1.131",
+  "template": "image_minimax_h3_image_t2i.json",
+  "template_sha256": "73f7d9c137e48de2183d9f9e19cdd0ea9009d9433fd3a48f10c43534eecf255b",
+  "api_workflow": "configs/workflows/t2i_2048_api.json",
+  "derivation": "Core native nodes from the text-to-image subgraph; fixed 2048x2048, seed 42, six euler/simple steps, CFG 1; direct authored prompt with expander branch omitted.",
+  "upstream_source": "https://docs.comfy.org/tutorials/image/minimax/minimax-h3-image"
+}

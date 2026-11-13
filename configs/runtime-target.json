@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "planned_not_project_qualified",
+  "status": "target_specification_see_runtime_lock",
   "foundation": {
     "profile": "rocm10-foundation-r9700-v1",
     "image_id": "sha256:a79c374ab2bc93c0e4358da6c7bda5cb84cf1308e8aff74fc99fc95c511cbd03",
@@ -21,15 +21,14 @@
   },
   "execution": {
     "workspace_launcher": "../rocm10-launch.sh",
-    "excluded_physical_gpu_ids": [3],
+    "excluded_physical_gpu_ids": [
+      3
+    ],
     "actual_devices": null,
     "shared_reservations_required": true,
     "project_private_caches_required": true
   },
   "qualification": {
-    "environment": "not_run",
-    "single_gpu_image": "not_run",
-    "dual_gpu_image": "not_run",
-    "four_gpu_image": "not_run"
+    "actual_results": "runtime-lock.json"
   }
 }

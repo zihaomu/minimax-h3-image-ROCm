@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "status": "environment_and_first_image_qualified",
+  "foundation": {
+    "profile": "rocm10-foundation-r9700-v1",
+    "image_id": "sha256:a79c374ab2bc93c0e4358da6c7bda5cb84cf1308e8aff74fc99fc95c511cbd03",
+    "rocm_release": "10.1.0",
+    "python": "3.13.13",
+    "torch": "2.14.0+rocm10.1.0",
+    "triton": "3.8.0+git669b31ac.rocm10.1.0",
+    "hip_build": "7.16.26385",
+    "gpu_architecture": "gfx1201"
+  },
+  "application": {
+    "comfyui_repository": "https://github.com/Comfy-Org/ComfyUI",
+    "comfyui_commit": "989d93d0d968e704c589ce0146bb18c77f6b50cc",
+    "versions": {
+      "torch": "2.14.0+rocm10.1.0",
+      "triton": "3.8.0+git669b31ac.rocm10.1.0",
+      "torchvision": "0.29.0a0+rocm10.1.0",
+      "comfy-kitchen": "0.2.41",
+      "comfy-aimdo": "0.6.0",
+      "comfyui-workflow-templates": "0.11.105",
+      "comfyui-workflow-templates-json": "0.1.131",
+      "transformers": "5.16.1",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0"
+    },
+    "native_build_sources": {
+      "comfy-kitchen": "cbc44a5b7cc3b8f910ef76ae5251c94971eb05d1",
+      "comfy-aimdo": "68088de9dce9f5e32231fccf230938769c5562da"
+    },
+    "native_extensions": [
+      {
+        "path": ".runtime/venv/lib/python3.13/site-packages/comfy_kitchen/backends/hip/_C.abi3.so",
+        "sha256": "5512ceafe9cf1097fee44bade7db5776208c9b6480813e53b5322762e0cfd20a"
+      },
+      {
+        "path": ".runtime/venv/lib/python3.13/site-packages/comfy_aimdo/aimdo_rocm.so",
+        "sha256": "73dc8f0cb5dde4db22ffae5d693b3b21ad67f9a3e542344a464e1519cf54350b"
+      }
+    ],
+    "build_dependencies": {
+      "nanobind": "3.1.0",
+      "cmake": "4.4.4",
+      "ninja": "1.13.2",
+      "setuptools-scm": "10.3.4",
+      "setuptools": "81.0.0",
+      "wheel": "0.48.0"
+    },
+    "wheels": [
+      {
+        "path": ".runtime/sources/comfy-kitchen/dist/comfy_kitchen-0.2.41-cp312-abi3-linux_x86_64.whl",
+        "sha256": "16b65ccae7166b2d5f781285a1461f953e4fc4812a1c3d9c4b24f7db50a539ef"
+      },
+      {
+        "path": ".runtime/sources/comfy-aimdo/dist/comfy_aimdo-0.6.0-cp39-abi3-linux_x86_64.whl",
+        "sha256": "83575a3fe004b3d0095aa048b3c9d2ccda7d34d066fcd311f84a9b25906ac84d"
+      }
+    ],
+    "overlay_requirements": {
+      "path": "configs/requirements-image.lock",
+      "sha256": "c44351fe7dad08d672406eee5fda72eb4492a918d51a8506f077c1e8872ee6db"
+    }
+  },
+  "models": [
+    {
+      "path": "diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors",
+      "sha256": "83eb140f1ff95c068f8a6886e6d3f3d0d4ab2e07bb2fe6d2ef992a51146ee622",
+      "size_bytes": 20979314802
+    },
+    {
+      "path": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "sha256": "bc2ced0fbea64757fa9acddccfc0b3f4819d1dcf1da6c124d690d368be283923",
+      "size_bytes": 27141342152
+    },
+    {
+      "path": "vae/minimax_h3_image_vae_fp16.safetensors",
+      "sha256": "d80e9c2e5cfc9844869961ff5a58c9a9e52182df6bfb30b26018dd7f348721af",
+      "size_bytes": 1168505312
+    }
+  ],
+  "execution": {
+    "int8_convrot_backend": "comfy-kitchen HIP",
+    "attention": "PyTorch SDPA; actual request operators recorded per run",
+    "dynamic_vram": true,
+    "comfy_compiler": false,
+    "node_result_cache": false,
+    "devices_per_request": 1,
+    "gpu_architecture": "gfx1201",
+    "excluded_physical_gpu_ids": [
+      3
+    ],
+    "environment_smoke_run": "p1-environment-smoke",
+    "first_image_run": "p2-first-image-2048-r2"
+  },
+  "qualification": {
+    "environment": "passed",
+    "int8_convrot_operator_smoke": "passed_functional_not_full_precision_qualification",
+    "single_gpu_image": "passed_one_2048x2048_six_step_text_to_image_request",
+    "full_p2_baseline": "pending_AA_prompt_matrix_and_warm_samples",
+    "dual_gpu_image": "not_run",
+    "four_gpu_image": "not_run"
+  }
+}
