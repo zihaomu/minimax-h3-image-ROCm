@@ -20,12 +20,12 @@ The ComfyUI commit is `989d93d0d968e704c589ce0146bb18c77f6b50cc`. The [runtime l
 
 ## Install and check the environment
 
-Choose one available card for setup. The launcher checks device identity, KFD users, and shared reservations, then holds the shared lock for its own job.
+Set `SETUP_GPU_ID` to the physical ID of one available card on your machine. The launcher checks device identity, KFD users, and shared reservations, then holds the shared lock for its own job.
 
 ```bash
-python3 tools/run_rocm10.py --gpu 1 --run-dir runs/setup-image-env -- python tools/prepare_environment.py --install
-python3 tools/run_rocm10.py --gpu 1 --run-dir runs/build-image-native -- .runtime/venv/bin/python tools/build_native.py
-python3 tools/run_rocm10.py --gpu 1 --run-dir runs/check-native-image-env -- .runtime/venv/bin/python tools/probe_native_runtime.py --attention-4k
+python3 tools/run_rocm10.py --gpu "${SETUP_GPU_ID:?Set SETUP_GPU_ID to an available physical GPU ID}" --run-dir runs/setup-image-env -- python tools/prepare_environment.py --install
+python3 tools/run_rocm10.py --gpu "$SETUP_GPU_ID" --run-dir runs/build-image-native -- .runtime/venv/bin/python tools/build_native.py
+python3 tools/run_rocm10.py --gpu "$SETUP_GPU_ID" --run-dir runs/check-native-image-env -- .runtime/venv/bin/python tools/probe_native_runtime.py --attention-4k
 ```
 
 The project venv references the foundation packages through a `.pth` file. Dependency preparation rejects a resolver plan that would replace protected Torch, Triton, TorchVision, or ROCm packages. Native extensions are rebuilt from pinned source inside the same foundation for `gfx1201`; build and JIT caches remain project-local.
@@ -44,11 +44,11 @@ See [model sources and checksums](../models/README.md). Original-precision gener
 
 ## Generate a 1K, 2K, or 4K image
 
-The example uses ordered physical GPUs `1,5,6,7`, as in the published resolution benchmark. Availability must be checked for each run. The launcher maps that order to logical devices, reserves all four cards, and samples whole-card VRAM and process-tree RAM every 0.5 seconds.
+Set `GPU_IDS` to four available physical GPU IDs on your machine, separated by commas. The launcher maps that order to logical devices, reserves all four cards, and samples whole-card VRAM and process-tree RAM every 0.5 seconds.
 
 ```bash
 python3 tools/run_rocm10.py \
-  --gpus 1,5,6,7 \
+  --gpus "${GPU_IDS:?Set GPU_IDS to four comma-separated physical GPU IDs}" \
   --run-dir runs/native-4k-seed42 \
   --timeout 1800 \
   --monitor-interval 0.5 \
@@ -81,7 +81,7 @@ For A/A validation, keep the prompt, seed, dimensions, configuration, source, en
 
 ```bash
 python3 tools/run_rocm10.py \
-  --gpus 1,5,6,7 \
+  --gpus "${GPU_IDS:?Set GPU_IDS to four comma-separated physical GPU IDs}" \
   --run-dir runs/native-4k-seed42-aa \
   --timeout 1800 \
   --monitor-interval 0.5 \
@@ -104,8 +104,8 @@ The frozen [single-card INT8 release](releases/v0.1.0-image-int8-first-image.md)
 After those files are present, the legacy environment check and image entry point are:
 
 ```bash
-python3 tools/run_rocm10.py --gpu 1 --run-dir runs/check-int8-image-env -- .runtime/venv/bin/python tools/verify_environment.py
-python3 tools/run_rocm10.py --gpu 1 --run-dir runs/image-int8-2048-seed42 -- .runtime/venv/bin/python tools/run_image.py
+python3 tools/run_rocm10.py --gpu "${SETUP_GPU_ID:?Set SETUP_GPU_ID to an available physical GPU ID}" --run-dir runs/check-int8-image-env -- .runtime/venv/bin/python tools/verify_environment.py
+python3 tools/run_rocm10.py --gpu "$SETUP_GPU_ID" --run-dir runs/image-int8-2048-seed42 -- .runtime/venv/bin/python tools/run_image.py
 ```
 
 The [INT8 API workflow](../configs/workflows/t2i_2048_api.json) uses 2048 × 2048, batch 1, seed 42, six steps, CFG=1, Euler/simple, and denoise=1. It disables prompt expansion, the Comfy compiler, and node-result caching; DynamicVRAM remains enabled. Its output is under the run's `output/` directory.

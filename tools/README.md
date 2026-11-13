@@ -11,7 +11,7 @@ Run commands from the project root. See the [setup and generation guide](../docs
 | [`summarize_native_run.py`](summarize_native_run.py) | Summarize an existing native request using the Python standard library | `summary.json` and `summary.md` in that run directory |
 | [`summarize_resolution_sweep.py`](summarize_resolution_sweep.py) | Validate at least two completed requests per 1K/2K/4K resolution, matching identities and exact A/A artifacts | A prepared JSON summary on stdout; no inference |
 
-The launcher takes `--gpus 1,5,6,7` for an ordered four-card group or `--gpu 1` for one card. Choose available devices and a new `--run-dir` each time. Physical GPU3 is excluded on the development host.
+The launcher takes `--gpus "$GPU_IDS"` for an ordered four-card group or `--gpu "$SETUP_GPU_ID"` for one card. Set these variables to available physical GPU IDs on your machine and choose a new `--run-dir` each time. The [setup guide](../docs/QUICKSTART.md) documents launcher prerequisites and device policy.
 
 ## Tools inside the foundation
 

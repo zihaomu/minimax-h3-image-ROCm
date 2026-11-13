@@ -38,7 +38,7 @@ The existing Attention policy forces PyTorch Flash for sequences of at least 409
 
 ## Quick start
 
-The current launcher targets the **existing R9700 workspace foundation**: Linux, Docker, the parent workspace's `rocm10-launch.sh`, its locked image, and its shared GPU reservation/lock directories. See [environment setup](docs/QUICKSTART.md) before using these commands on a new checkout.
+Follow the [setup guide](docs/QUICKSTART.md) to prepare the tested software stack and launcher prerequisites.
 
 | Component | Tested version |
 |---|---|
@@ -59,11 +59,11 @@ python3 tools/download_native_models.py --workers 8 --chunk-mib 64
 
 The selected download is 122.33 GB across 40 files, including all DiT shards, PDD heads, VAE, tokenizer, and the text-encoder shards needed for Image's layer-50 hidden state. [Model sources and checksums](models/README.md) identify both fixed revisions. Weights are kept outside Git.
 
-Generate a 4K image from the project root:
+Set `GPU_IDS` to the comma-separated physical IDs of four available GPUs on your machine, in the order you want to use them. Then generate a 4K image from the project root:
 
 ```bash
 python3 tools/run_rocm10.py \
-  --gpus 1,5,6,7 \
+  --gpus "${GPU_IDS:?Set GPU_IDS to four comma-separated physical GPU IDs}" \
   --run-dir runs/native-4k-seed42 \
   --timeout 1800 \
   --monitor-interval 0.5 \
@@ -75,7 +75,7 @@ python3 tools/run_rocm10.py \
 
 Use `--width 1024 --height 1024` for 1K or `--width 2048 --height 2048` for 2K, with a new `--run-dir` each time. Add `--prompt "..."` to supply your own prompt. The configuration retains six steps and CFG=1.
 
-`--gpus` takes **ordered physical GPU IDs**, which the launcher maps to logical devices. Select four currently available cards; physical GPU3 is excluded on this host. The launcher checks occupancy and reservations, holds shared locks, and stops its own job if another process starts using a selected device.
+`--gpus` takes **ordered physical GPU IDs**, which the launcher maps to logical devices. Device selection depends on your machine; the [setup guide](docs/QUICKSTART.md) documents the supplied launcher's current requirements and device policy.
 
 After the request finishes, produce the compact resource report:
 
